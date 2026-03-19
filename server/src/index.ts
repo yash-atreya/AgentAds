@@ -166,12 +166,13 @@ app.post("/serve", async (c) => {
     "INSERT OR IGNORE INTO viewers (viewer_address) VALUES (?)"
   ).bind(viewer_address).run();
 
-  // 5. Select eligible ad (no viewer dedup — allows re-viewing for testing)
+  // 5. Select eligible ad (skip ads this viewer has already seen)
   const ad = await c.env.DB.prepare(`
     SELECT ad_id FROM ads
     WHERE balance_cents >= 10
+      AND ad_id NOT IN (SELECT ad_id FROM views WHERE viewer_address = ?)
     ORDER BY RANDOM() LIMIT 1
-  `).first<{ ad_id: string }>();
+  `).bind(viewer_address).first<{ ad_id: string }>();
 
   if (!ad) {
     return c.body(null, 204);
