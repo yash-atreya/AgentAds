@@ -1,0 +1,8 @@
+{
+  "name": "ad-consumer",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "viem": "^2.47.4"
+  }
+}
