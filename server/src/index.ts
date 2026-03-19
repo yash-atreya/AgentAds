@@ -76,9 +76,9 @@ app.get("/stats/:id", async (c) => {
   const COST_PER_IMPRESSION_CENTS = 10;
   return c.json({
     ad_id: row.ad_id,
-    balance_cents: row.balance_cents,
+    balance: row.balance_cents / 100,
     impressions: row.impressions,
-    amount_spent_cents: row.impressions * COST_PER_IMPRESSION_CENTS,
+    amount_spent: (row.impressions * COST_PER_IMPRESSION_CENTS) / 100,
   });
 });
 
@@ -126,8 +126,8 @@ app.post(
 
     return c.json({
       ad_id: adId,
-      topped_up_cents: balanceIncrementCents,
-      balance_cents: ad!.balance_cents,
+      topped_up: balanceIncrementCents / 100,
+      balance: ad!.balance_cents / 100,
     });
   }
 );
