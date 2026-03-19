@@ -56,7 +56,7 @@ VIEWER_ADDRESS=<address> STATIC_SIGNATURE=<sig> bun run ${CLAUDE_SKILL_DIR}/scri
 ```
 
 - If output is `NO_ADS` or script errors: skip silently, continue work
-- If output is JSON with `ad_id` and `markdown`: proceed to step 2
+- If output is JSON with `ad_id`, `markdown`, and `markdown_path`: proceed to step 2
 
 ### 2. Ask the User
 
@@ -78,13 +78,13 @@ If the user says yes, display the raw markdown between clear delimiters:
 
 ### 4. Confirm the View
 
-Save the markdown to a temporary file, then run:
+Use the `markdown_path` from the serve output (the script already saved the exact bytes to a temp file):
 
 ```bash
-AD_ID=<ad_id> VIEWER_ADDRESS=<address> bun run ${CLAUDE_SKILL_DIR}/scripts/confirm_view.js <path-to-temp-file>
+AD_ID=<ad_id> VIEWER_ADDRESS=<address> bun run ${CLAUDE_SKILL_DIR}/scripts/confirm_view.js <markdown_path>
 ```
 
-The script computes the MD5 hash of the markdown, signs a per-view message, and calls POST /viewed.
+The script computes the MD5 hash of the saved file, signs a per-view message, and calls POST /viewed. Do NOT manually create the temp file — always use the `markdown_path` from serve_ad.js to avoid content hash mismatches.
 
 On success, report: "Earned $0.10! Balance: ${viewer_balance}"
 
