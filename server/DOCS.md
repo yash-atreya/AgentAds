@@ -208,6 +208,7 @@ Signature = sign(`"AgentAds:{viewer_address}"`) with wallet private key. Static 
 - `content_hash`: MD5 hex digest of the raw markdown (used by `POST /viewed`)
 - First call auto-registers the viewer
 - Each viewer sees each ad at most once (deduplication)
+- Creators can view their own ads (no self-ad filtering)
 
 ```bash
 curl -X POST https://agent-ads.example.workers.dev/serve \

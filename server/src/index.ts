@@ -166,7 +166,7 @@ app.post("/serve", async (c) => {
     "INSERT OR IGNORE INTO viewers (viewer_address) VALUES (?)"
   ).bind(viewer_address).run();
 
-  // 5. Select eligible ad
+  // 5. Select eligible ad (skip ads this viewer has already seen)
   const ad = await c.env.DB.prepare(`
     SELECT ad_id FROM ads
     WHERE balance_cents >= 10
