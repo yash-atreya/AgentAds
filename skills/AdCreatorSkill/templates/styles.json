@@ -1,0 +1,118 @@
+{
+  "styles": {
+    "professional": {
+      "name": "Professional",
+      "description": "Clean box-drawing characters, formal appearance",
+      "borders": {
+        "topLeft": "╔",
+        "topRight": "╗",
+        "bottomLeft": "╚",
+        "bottomRight": "╝",
+        "horizontal": "═",
+        "vertical": "║",
+        "dividerLeft": "╠",
+        "dividerRight": "╣",
+        "dividerHorizontal": "═"
+      },
+      "bullets": {
+        "default": "✓",
+        "highlight": "★"
+      },
+      "icons": {
+        "link": "🔗",
+        "info": "ℹ️",
+        "success": "✅"
+      }
+    },
+    "tech": {
+      "name": "Tech/Developer",
+      "description": "Comment-style borders, code aesthetic",
+      "borders": {
+        "topLeft": "/*",
+        "topRight": "**",
+        "bottomLeft": " *",
+        "bottomRight": "*/",
+        "horizontal": "*",
+        "vertical": " *",
+        "dividerLeft": " *",
+        "dividerRight": "*",
+        "dividerHorizontal": "*"
+      },
+      "bullets": {
+        "default": "→",
+        "highlight": "▶"
+      },
+      "icons": {
+        "link": "🔗",
+        "info": "//",
+        "success": "[✓]"
+      }
+    },
+    "decorative": {
+      "name": "Decorative",
+      "description": "Eye-catching with emojis and special characters",
+      "borders": {
+        "topLeft": "★",
+        "topRight": "★",
+        "bottomLeft": "★",
+        "bottomRight": "★",
+        "horizontal": "━",
+        "vertical": "┃",
+        "dividerLeft": "┃",
+        "dividerRight": "┃",
+        "dividerHorizontal": "━"
+      },
+      "bullets": {
+        "default": "✨",
+        "highlight": "🌟"
+      },
+      "icons": {
+        "link": "🌐",
+        "info": "💡",
+        "success": "🎉"
+      }
+    },
+    "minimal": {
+      "name": "Minimal",
+      "description": "Simple ASCII characters only",
+      "borders": {
+        "topLeft": "+",
+        "topRight": "+",
+        "bottomLeft": "+",
+        "bottomRight": "+",
+        "horizontal": "-",
+        "vertical": "|",
+        "dividerLeft": "|",
+        "dividerRight": "|",
+        "dividerHorizontal": "-"
+      },
+      "bullets": {
+        "default": "*",
+        "highlight": ">"
+      },
+      "icons": {
+        "link": "[Link]",
+        "info": "[i]",
+        "success": "[OK]"
+      }
+    }
+  },
+  "widths": {
+    "compact": {
+      "total": 44,
+      "inner": 40
+    },
+    "standard": {
+      "total": 50,
+      "inner": 46
+    },
+    "extended": {
+      "total": 60,
+      "inner": 56
+    }
+  },
+  "defaults": {
+    "style": "professional",
+    "width": "standard"
+  }
+}
