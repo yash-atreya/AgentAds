@@ -1,0 +1,22 @@
+---
+name: "{PRODUCT_NAME}"
+description: "{ONE_LINE_DESCRIPTION}"
+---
+
+# {PRODUCT_NAME}
+
+{HOOK_PARAGRAPH}
+
+## Key Features
+
+- **{FEATURE_1}**: {DESCRIPTION_1}
+- **{FEATURE_2}**: {DESCRIPTION_2}
+- **{FEATURE_3}**: {DESCRIPTION_3}
+
+## Get Started
+
+{GETTING_STARTED_INSTRUCTIONS}
+
+---
+
+**{CTA_TEXT}** — {CTA_URL}
