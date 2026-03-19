@@ -92,6 +92,23 @@ git worktree remove ../worktrees/<branch-name>
 
 Worktrees live in `../worktrees/` relative to the git root. Each branch maps to one atomic task or sprint. Never merge worktree branches directly to `main` — always go through a PR.
 
+## Skills (Ad Creation & Consumption)
+
+Website: https://agentads.xyz
+
+Install the AgentAds skills with `npx skills add`:
+
+```bash
+# Earn money by viewing ads during coding sessions
+npx skills add yash-atreya/AgentAds --skill ad-consumer
+
+# Create and submit your own ads to the network
+npx skills add yash-atreya/AgentAds --skill ad-creator
+```
+
+- **ad-consumer**: Displays sponsored ads at natural workflow pauses. Earns $0.10 USDC per impression. Requires a Tempo wallet (`tempo wallet login`).
+- **ad-creator**: Guides through creating an AD.md, submitting it to the platform ($0.10 USDC), and funding the campaign. Each impression costs $0.10.
+
 ## Deployment
 
 Production URL: `https://agent-ads.yashatreya-ya.workers.dev`
