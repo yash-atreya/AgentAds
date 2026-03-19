@@ -65,4 +65,15 @@ app.post(
   }
 );
 
+app.get("/ad/:id", async (c) => {
+  const adId = c.req.param("id");
+  const obj = await c.env.AD_BUCKET.get(`ads/${adId}.md`);
+  if (!obj) return c.json({ error: "Ad not found" }, 404);
+  const markdown = await obj.text();
+  return new Response(markdown, {
+    status: 200,
+    headers: { "Content-Type": "text/markdown; charset=utf-8" },
+  });
+});
+
 export default app;
