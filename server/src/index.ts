@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { Receipt } from "mppx";
 import { Mppx, tempo } from "mppx/hono";
 import { verifyMessage, createWalletClient, http, parseUnits } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -19,7 +20,29 @@ async function md5Hex(data: string): Promise<string> {
   return [...new Uint8Array(buffer)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+async function safeVerifyMessage(args: { address: `0x${string}`; message: string; signature: `0x${string}` }): Promise<boolean> {
+  try {
+    return await verifyMessage(args);
+  } catch {
+    return false;
+  }
+}
+
 const app = new Hono<AppContext>();
+
+// Log MPP payment receipts to the payments table
+app.use("*", async (c, next) => {
+  await next();
+  const receiptHeader = c.res.headers.get("Payment-Receipt");
+  const meta = c.get("paymentMeta");
+  if (!receiptHeader || !meta) return;
+  try {
+    const receipt = Receipt.deserialize(receiptHeader);
+    await c.env.DB.prepare(
+      "INSERT INTO payments (payment_id, tx_hash, endpoint, ad_id, amount_cents) VALUES (?, ?, ?, ?, ?)"
+    ).bind(crypto.randomUUID(), receipt.reference, meta.endpoint, meta.ad_id ?? null, meta.amount_cents).run();
+  } catch {}
+});
 
 app.get("/health", (c) => c.json({ status: "ok" }));
 
@@ -78,6 +101,7 @@ app.post(
       .bind(adId, creator_address)
       .run();
 
+    c.set("paymentMeta", { endpoint: "POST /ad", ad_id: adId, amount_cents: 10 });
     return c.json({ ad_id: adId }, 201);
   }
 );
@@ -128,7 +152,7 @@ app.post("/serve", async (c) => {
 
   // 3. Verify signature
   const message = `AgentAds:${viewer_address}`;
-  const valid = await verifyMessage({
+  const valid = await safeVerifyMessage({
     address: viewer_address as `0x${string}`,
     message,
     signature: signature as `0x${string}`,
@@ -160,12 +184,10 @@ app.post("/serve", async (c) => {
     return c.json({ error: "Ad content not found" }, 500);
   }
   const markdown = await obj.text();
-  const contentHash = await md5Hex(markdown);
 
   return c.json({
     ad_id: ad.ad_id,
     markdown,
-    content_hash: contentHash,
   });
 });
 
@@ -187,7 +209,7 @@ app.post("/viewed", async (c) => {
 
   // 3. Verify signature over content_hash:viewer_address
   const message = `${content_hash}:${viewer_address}`;
-  const valid = await verifyMessage({
+  const valid = await safeVerifyMessage({
     address: viewer_address as `0x${string}`,
     message,
     signature: signature as `0x${string}`,
@@ -285,7 +307,7 @@ app.post("/withdraw", async (c) => {
 
   // 3. Verify signature
   const message = `AgentAds:${viewer_address}`;
-  const valid = await verifyMessage({
+  const valid = await safeVerifyMessage({
     address: viewer_address as `0x${string}`,
     message,
     signature: signature as `0x${string}`,
@@ -410,6 +432,7 @@ app.post(
     ).bind(adId).first<{ balance_cents: number }>();
 
     const feeCents = Math.round(balanceIncrementCents * 0.01);
+    c.set("paymentMeta", { endpoint: "POST /topup", ad_id: adId, amount_cents: balanceIncrementCents + feeCents });
     return c.json({
       ad_id: adId,
       topped_up: balanceIncrementCents / 100,

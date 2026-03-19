@@ -12,6 +12,9 @@ export interface Env {
 
 export interface AppContext {
   Bindings: Env;
+  Variables: {
+    paymentMeta?: { endpoint: string; ad_id?: string; amount_cents: number };
+  };
 }
 
 export const createAdSchema = z.object({
