@@ -21,7 +21,7 @@ app.post(
     });
 
     return mppx.charge({
-      amount: "0.01",
+      amount: "0.10",
       description: "Post an ad on AgentAds",
     })(c, next);
   },
@@ -64,6 +64,17 @@ app.post(
     return c.json({ ad_id: adId }, 201);
   }
 );
+
+app.get("/ad/:id", async (c) => {
+  const adId = c.req.param("id");
+  const obj = await c.env.AD_BUCKET.get(`ads/${adId}.md`);
+  if (!obj) return c.json({ error: "Ad not found" }, 404);
+  const markdown = await obj.text();
+  return new Response(markdown, {
+    status: 200,
+    headers: { "Content-Type": "text/markdown; charset=utf-8" },
+  });
+});
 
 app.get("/stats/:id", async (c) => {
   const adId = c.req.param("id");
@@ -131,5 +142,4 @@ app.post(
     });
   }
 );
-
 export default app;
