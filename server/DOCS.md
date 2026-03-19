@@ -169,7 +169,7 @@ curl -X POST "https://agent-ads.example.workers.dev/topup/550e8400-e29b-41d4-a71
 
 ### POST /serve
 
-Serve an ad to a viewer and credit them $0.10. Agent-gated.
+Serve an ad to a viewer. Does **not** bill or credit — call `POST /viewed` after the user confirms viewing. Agent-gated.
 
 **Request**
 
@@ -201,14 +201,11 @@ Signature = sign(`"AgentAds:{viewer_address}"`) with wallet private key. Static 
 {
   "ad_id": "uuid",
   "markdown": "# Ad content...",
-  "impression_id": "uuid",
-  "earned": 0.10,
-  "viewer_balance": 0.30
+  "content_hash": "a1b2c3d4e5f6..."
 }
 ```
 
-- `earned`: Amount earned for this impression ($0.10)
-- `viewer_balance`: Updated viewer balance in USD
+- `content_hash`: MD5 hex digest of the raw markdown (used by `POST /viewed`)
 - First call auto-registers the viewer
 - Each viewer sees each ad at most once (deduplication)
 
@@ -217,6 +214,62 @@ curl -X POST https://agent-ads.example.workers.dev/serve \
   -H "Content-Type: application/json" \
   -H "X-AgentAds-Client: my-skill/1.0" \
   -d '{"viewer_address":"0xYOUR_ADDRESS","signature":"0xYOUR_SIGNATURE"}'
+```
+
+---
+
+### POST /viewed
+
+Confirm that a viewer has seen an ad. Bills the advertiser and credits the viewer $0.10. Agent-gated.
+
+**Request**
+
+- Content-Type: `application/json`
+- Required header: `X-AgentAds-Client: <client-name>/<version>`
+
+```json
+{
+  "viewer_address": "0x...",
+  "signature": "0x...",
+  "content_hash": "a1b2c3d4e5f6...",
+  "ad_id": "uuid"
+}
+```
+
+Signature = sign(`"{content_hash}:{viewer_address}"`) with wallet private key. This is a **per-view** signature (not the static one used by `/serve`).
+
+**Response**
+
+| Status | Body |
+|--------|------|
+| 200 | See below |
+| 400 | `{"error": ...}` (validation failure or content hash mismatch) |
+| 401 | `{"error": "Invalid signature"}` |
+| 403 | `{"error": "Missing X-AgentAds-Client header"}` |
+| 404 | `{"error": "Ad not found or insufficient balance"}` |
+| 409 | `{"error": "Ad no longer available"}` |
+
+**200 Response Body**
+
+```json
+{
+  "ad_id": "uuid",
+  "impression_id": "uuid",
+  "earned": 0.10,
+  "viewer_balance": 0.30
+}
+```
+
+- `earned`: Amount earned for this view ($0.10)
+- `viewer_balance`: Updated viewer balance in USD
+- The `content_hash` must match the MD5 of the ad's actual markdown
+- Each viewer can only confirm each ad once (deduplication via unique index)
+
+```bash
+curl -X POST https://agent-ads.example.workers.dev/viewed \
+  -H "Content-Type: application/json" \
+  -H "X-AgentAds-Client: my-skill/1.0" \
+  -d '{"viewer_address":"0xADDR","signature":"0xSIG","content_hash":"abc123...","ad_id":"uuid"}'
 ```
 
 ---
@@ -309,13 +362,17 @@ curl -X POST https://agent-ads.example.workers.dev/withdraw \
 
 ## Agent-Gated Endpoints
 
-`POST /serve` and `POST /withdraw` are agent-gated endpoints. They require:
+`POST /serve`, `POST /viewed`, and `POST /withdraw` are agent-gated endpoints. They require:
 
 1. **`X-AgentAds-Client` header** — Identifies the calling agent or skill. Format: `<client-name>/<version>` (e.g., `my-skill/1.0`). Requests without this header receive `403 Forbidden`.
 
-2. **Wallet signature** — Proves ownership of the viewer address. Sign the message `"AgentAds:{viewer_address}"` with your wallet's private key. The signature is **static** — sign once, reuse forever for the same wallet.
+2. **Wallet signature** — Format depends on the endpoint:
+   - `POST /serve` and `POST /withdraw`: Sign `"AgentAds:{viewer_address}"` — **static**, sign once, reuse forever.
+   - `POST /viewed`: Sign `"{content_hash}:{viewer_address}"` — **per-view**, proving the viewer saw the specific ad content.
 
 3. **Auto-registration** — Viewers are automatically registered on their first `POST /serve` call. No separate registration endpoint is needed.
+
+4. **Two-step view flow** — Call `POST /serve` to get an ad, display it, then call `POST /viewed` after the user confirms they viewed it. Billing only happens on `/viewed`.
 
 ---
 
