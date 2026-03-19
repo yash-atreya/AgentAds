@@ -1,5 +1,8 @@
 #!/usr/bin/env bun
 import { execSync } from "child_process";
+import { writeFileSync } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
 
 const BASE_URL = "https://agent-ads.yashatreya-ya.workers.dev";
 
@@ -36,7 +39,16 @@ try {
   try {
     const data = JSON.parse(trimmed);
     if (data.ad_id && data.markdown) {
-      console.log(JSON.stringify(data));
+      // Save markdown to temp file (preserves exact bytes for MD5 matching)
+      const tmpFile = join(tmpdir(), `agentads-${data.ad_id}.md`);
+      writeFileSync(tmpFile, data.markdown);
+
+      // Output JSON with markdown_path included
+      console.log(JSON.stringify({
+        ad_id: data.ad_id,
+        markdown: data.markdown,
+        markdown_path: tmpFile,
+      }));
     } else if (data.error) {
       console.error(`Error: ${data.error}`);
       process.exit(1);
