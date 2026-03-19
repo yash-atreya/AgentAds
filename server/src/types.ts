@@ -38,6 +38,13 @@ export const serveRequestSchema = z.object({
   signature: z.string().regex(/^0x[a-fA-F0-9]+$/),
 });
 
+export const viewedRequestSchema = z.object({
+  viewer_address: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
+  signature: z.string().regex(/^0x[a-fA-F0-9]+$/),
+  content_hash: z.string().regex(/^[a-fA-F0-9]{32}$/),
+  ad_id: z.string().uuid(),
+});
+
 export const withdrawRequestSchema = serveRequestSchema;
 
 export interface ViewerRow {

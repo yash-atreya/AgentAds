@@ -7,11 +7,17 @@ import {
   createAdSchema,
   topupAmountSchema,
   serveRequestSchema,
+  viewedRequestSchema,
   withdrawRequestSchema,
   type AppContext,
   type AdStatsRow,
   type ViewerRow,
 } from "./types";
+
+async function md5Hex(data: string): Promise<string> {
+  const buffer = await crypto.subtle.digest("MD5", new TextEncoder().encode(data));
+  return [...new Uint8Array(buffer)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 const app = new Hono<AppContext>();
 
@@ -154,16 +160,75 @@ app.post("/serve", async (c) => {
     return c.json({ error: "Ad content not found" }, 500);
   }
   const markdown = await obj.text();
+  const contentHash = await md5Hex(markdown);
 
-  // 7. Atomic D1 batch
+  return c.json({
+    ad_id: ad.ad_id,
+    markdown,
+    content_hash: contentHash,
+  });
+});
+
+app.post("/viewed", async (c) => {
+  // 1. Check X-AgentAds-Client header
+  const clientHeader = c.req.header("X-AgentAds-Client");
+  if (!clientHeader) {
+    return c.json({ error: "Missing X-AgentAds-Client header" }, 403);
+  }
+
+  // 2. Parse and validate body
+  const body = await c.req.json();
+  const parsed = viewedRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({ error: parsed.error.flatten() }, 400);
+  }
+
+  const { viewer_address, signature, content_hash, ad_id } = parsed.data;
+
+  // 3. Verify signature over content_hash:viewer_address
+  const message = `${content_hash}:${viewer_address}`;
+  const valid = await verifyMessage({
+    address: viewer_address as `0x${string}`,
+    message,
+    signature: signature as `0x${string}`,
+  });
+  if (!valid) {
+    return c.json({ error: "Invalid signature" }, 401);
+  }
+
+  // 4. Verify ad exists and has balance
+  const ad = await c.env.DB.prepare(
+    "SELECT ad_id, balance_cents FROM ads WHERE ad_id = ? AND balance_cents >= 10"
+  ).bind(ad_id).first<{ ad_id: string; balance_cents: number }>();
+  if (!ad) {
+    return c.json({ error: "Ad not found or insufficient balance" }, 404);
+  }
+
+  // 5. Verify content_hash matches actual ad markdown
+  const obj = await c.env.AD_BUCKET.get(`ads/${ad_id}.md`);
+  if (!obj) {
+    return c.json({ error: "Ad content not found" }, 500);
+  }
+  const markdown = await obj.text();
+  const expectedHash = await md5Hex(markdown);
+  if (content_hash.toLowerCase() !== expectedHash.toLowerCase()) {
+    return c.json({ error: "Content hash mismatch" }, 400);
+  }
+
+  // 6. Auto-register viewer (in case /viewed is called without prior /serve)
+  await c.env.DB.prepare(
+    "INSERT OR IGNORE INTO viewers (viewer_address) VALUES (?)"
+  ).bind(viewer_address).run();
+
+  // 7. Atomic D1 batch — billing
   const impressionId = crypto.randomUUID();
   const results = await c.env.DB.batch([
     c.env.DB.prepare(
       "UPDATE ads SET balance_cents = balance_cents - 10, impressions = impressions + 1 WHERE ad_id = ? AND balance_cents >= 10"
-    ).bind(ad.ad_id),
+    ).bind(ad_id),
     c.env.DB.prepare(
       "INSERT INTO views (impression_id, ad_id, viewer_address, earned_cents) VALUES (?, ?, ?, 10)"
-    ).bind(impressionId, ad.ad_id, viewer_address),
+    ).bind(impressionId, ad_id, viewer_address),
     c.env.DB.prepare(
       "UPDATE viewers SET balance_cents = balance_cents + 10, total_earned_cents = total_earned_cents + 10, impression_count = impression_count + 1 WHERE viewer_address = ?"
     ).bind(viewer_address),
@@ -180,8 +245,7 @@ app.post("/serve", async (c) => {
   ).bind(viewer_address).first<{ balance_cents: number }>();
 
   return c.json({
-    ad_id: ad.ad_id,
-    markdown,
+    ad_id,
     impression_id: impressionId,
     earned: 0.10,
     viewer_balance: (viewer?.balance_cents ?? 0) / 100,
