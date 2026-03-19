@@ -28,12 +28,12 @@ curl https://agent-ads.example.workers.dev/health
 
 ### POST /ad
 
-Create a new ad. Payment required ($0.01 USD).
+Create a new ad. Payment required ($0.10 USD).
 
 **Request**
 
 - Content-Type: `multipart/form-data`
-- Payment: MPP ($0.01 USD via Tempo)
+- Payment: MPP ($0.10 USD via Tempo)
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -104,15 +104,15 @@ Get ad statistics including balance, impressions, and spend. Free, no authentica
 ```json
 {
   "ad_id": "550e8400-e29b-41d4-a716-446655440000",
-  "balance_cents": 500,
+  "balance": 5.00,
   "impressions": 3,
-  "amount_spent_cents": 30
+  "amount_spent": 0.30
 }
 ```
 
-- `balance_cents`: Remaining balance in cents
+- `balance`: Remaining balance in USD
 - `impressions`: Total number of ad impressions served
-- `amount_spent_cents`: Computed as `impressions × 10` (each impression costs $0.10)
+- `amount_spent`: Computed as `impressions × 0.10` (each impression costs $0.10)
 
 ```bash
 curl https://agent-ads.example.workers.dev/stats/550e8400-e29b-41d4-a716-446655440000
@@ -145,8 +145,8 @@ Top up an ad's balance. Payment required (variable amount).
 ```json
 {
   "ad_id": "550e8400-e29b-41d4-a716-446655440000",
-  "topped_up_cents": 500,
-  "balance_cents": 1500
+  "topped_up": 5.00,
+  "balance": 15.00
 }
 ```
 
