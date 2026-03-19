@@ -92,6 +92,8 @@ How does this feel? Ready to proceed with submission, or would you like other ch
 
 ## The Three Stages
 
+I'll track your progress with a visual checklist:
+
 ### 📝 Stage 1: Design
 - I analyze your project to understand its value
 - We craft the perfect tagline together
@@ -99,19 +101,37 @@ How does this feel? Ready to proceed with submission, or would you like other ch
 - Fine-tune the benefits and messaging
 - Create an effective agent discovery prompt
 
+Progress tracking:
+☑ Project analyzed
+☑ Ad draft created
+☐ Style selected
+☐ Final approval
+
 ### 📤 Stage 2: Submit
-- I validate all components meet requirements
-- Check character limits and formatting
-- Submit to the AgentAds network (when configured)
+- I'll show you a final preview of your ad
+- Ask for confirmation with clear options:
+  - "Submit the ad now"
+  - "Make final edits"
+  - "Save as draft for later"
+  - "Cancel - don't submit"
+- Once you confirm, I'll submit to the AgentAds network
 - Provide your unique ad ID for tracking
 
+**Note to Claude:** Use askUser tool for interactive selection when available. If not available, present as numbered options (1-4) that users can respond to naturally.
+
 ### 💰 Stage 3: Fund
-- Review budget options and estimated impressions
-- Choose your distribution tier
-- Process funding to activate the campaign
+- Present funding options with clear choices:
+  - **Option 1**: Starter $10 (~1,000 impressions)
+  - **Option 2**: Growth $50 (~6,000 impressions)
+  - **Option 3**: Premium $100 (~15,000 impressions)
+  - **Option 4**: Custom amount
+  - **Option 5**: Fund later
+- Process your selection to activate the campaign
 - Monitor your ad's performance
 
 ## Visual Styles Available
+
+I can show you all styles at once! Just say "show me all styles" and I'll display:
 
 ### Professional
 Clean box-drawing characters with a formal appearance
@@ -135,12 +155,20 @@ I automatically save your progress, so you can:
 
 ## Natural Interaction
 
-No numbered menus or command-line prompts! Just have a conversation with me:
-- "Make the tagline shorter"
-- "Add a benefit about API performance"
-- "Show me all style options"
-- "I don't like this, let's start over"
-- "Can we go back to the previous version?"
+While I guide you conversationally, I'll present clear multiple-choice options at decision points:
+
+**For confirmation before posting:**
+- Option 1: Submit the ad now
+- Option 2: Make final edits
+- Option 3: Save as draft
+- Option 4: Cancel
+
+**You can respond by:**
+- Saying the option number: "Option 1" or just "1"
+- Using the action words: "Submit" or "Edit"
+- Natural language: "Yes, post it" or "Let me make changes"
+
+No rigid command-line prompts - just clear choices when you need them!
 
 ## Behind the Scenes
 
@@ -150,6 +178,23 @@ I use specialized tools to:
 - **Save** your progress automatically
 - **Validate** ad components before submission
 - **Submit** to the network when ready
+
+## Progress Tracking
+
+Throughout our conversation, I'll use TodoWrite to show your progress:
+
+```
+Ad Creation Checklist:
+☑ Started ad creation
+☑ Analyzed project/service
+☑ Generated initial draft
+☐ Selected final style
+☐ Approved for submission
+☐ Submitted to network
+☐ Funding configured
+```
+
+You can ask "What's my progress?" at any time to see where we are.
 
 ## Getting Help
 

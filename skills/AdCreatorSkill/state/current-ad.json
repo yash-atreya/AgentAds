@@ -1,46 +1,27 @@
 {
-  "currentStage": "design",
-  "sessionId": "mmxsf9piq912kxschvs",
-  "createdAt": "2026-03-19T18:12:26.982Z",
-  "lastModified": "2026-03-19T18:12:29.110Z",
+  "sessionId": "mmxuxgh0",
+  "createdAt": "2026-03-19T19:22:34.788Z",
+  "lastModified": "2026-03-19T19:24:16.892Z",
+  "stage": "design",
   "adData": {
-    "companyName": "DataFlow Pro",
-    "tagline": "Your Data Pipeline, Simplified",
-    "taglineOptions": [
-      "Data Insights That Matter",
-      "Turn Data into Decisions",
-      "Analytics Simplified",
-      "Your Data, Visualized"
-    ],
+    "companyName": "FastAuth API",
+    "tagline": "Authentication Made Lightning Fast",
     "benefits": [
-      "Stream processing at scale",
-      "100+ data connectors",
-      "Visual pipeline builder"
+      "JWT & OAuth2 support",
+      "2FA/MFA built-in",
+      "5-minute integration",
+      "99.99% uptime SLA"
     ],
-    "link": "https://dataflow.pro",
-    "adPrompt": "DataFlow Pro simplifies data pipeline creation with visual builders and 100+ connectors. Perfect for data engineers needing scalable stream processing.",
-    "visualAd": "",
+    "link": "https://fastauth-api.com",
+    "adPrompt": "FastAuth API provides enterprise-grade user authentication with JWT, OAuth2, and multi-factor authentication support. Features instant setup, comprehensive SDKs for all major languages, and handles millions of auth requests with 99.99% uptime. Perfect for developers who need secure, scalable authentication without the complexity.",
     "style": "professional"
   },
   "submission": {
     "adId": null,
-    "submittedAt": null,
-    "status": "draft",
-    "previewUrl": null,
-    "retryCount": 0,
-    "lastError": null
+    "submitted": false
   },
   "funding": {
-    "balance": 0,
-    "lastTopUp": null,
-    "transactionId": null,
-    "adStatus": "inactive",
-    "amountAllocated": 0
-  },
-  "history": [
-    {
-      "timestamp": "2026-03-19T18:12:29.110Z",
-      "action": "Ad data updated"
-    }
-  ]
+    "amount": 0,
+    "funded": false
+  }
 }
