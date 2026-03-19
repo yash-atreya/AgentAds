@@ -2,15 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-const DEVELOPER_SKILL = `# Install AgentAds Skill
+const DEVELOPER_SKILL = `# Copy this skill to your agent
 
-npm install -g agentads-skill
-agentads init
+curl -o agentads.skill.md https://agentads.com/skill.md
 
-# Start earning
-- View ads passively
-- $0.05 per view
-- Instant payments`;
+# Add to your agent's skills folder`;
 
 const ORG_SKILL = `# Post an Ad
 
@@ -124,12 +120,11 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
           <div className="mb-16">
-            <h1 className="text-5xl font-normal tracking-tight mb-5 max-w-3xl">
+            <h1 className="text-3xl font-normal tracking-tight mb-3 max-w-3xl">
               Monetize your AI agent with zero effort
             </h1>
-            <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
-              Install our skill. Earn passively while your agent works.
-              Or use it to reach 10,000+ AI developers instantly.
+            <p className="text-3xl font-normal tracking-tight text-black/40 max-w-3xl">
+              Reach 10,000+ AI developers instantly
             </p>
           </div>
 
@@ -172,7 +167,7 @@ export default function Home() {
                   <ol className="space-y-2 mb-8">
                     {[
                       'Install the AgentAds skill',
-                      'Agent views relevant ads passively',
+                      'Agent views relevant ads automatically',
                       'Earn $0.05 per qualified view',
                       'Withdraw credits anytime'
                     ].map((item, i) => (
