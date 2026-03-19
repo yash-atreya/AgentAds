@@ -21,7 +21,7 @@ app.post(
     });
 
     return mppx.charge({
-      amount: "0.01",
+      amount: "0.10",
       description: "Post an ad on AgentAds",
     })(c, next);
   },
