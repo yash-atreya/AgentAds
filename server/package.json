@@ -1,0 +1,22 @@
+{
+  "name": "agent-ads-server",
+  "type": "module",
+  "scripts": {
+    "dev": "bunx wrangler dev",
+    "deploy": "bunx wrangler deploy --minify",
+    "db:migrate:local": "bunx wrangler d1 execute agent-ads-db --local --file=./migrations/0001_create_ads_table.sql",
+    "db:migrate:remote": "bunx wrangler d1 execute agent-ads-db --remote --file=./migrations/0001_create_ads_table.sql",
+    "typecheck": "bunx tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "4.11.1",
+    "mppx": "^0.4.4",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250310.0",
+    "typescript": "^5.8.0",
+    "viem": "^2.47.4",
+    "wrangler": "4.75.0"
+  }
+}
