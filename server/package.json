@@ -6,7 +6,9 @@
     "deploy": "bunx wrangler deploy --minify",
     "db:migrate:local": "bunx wrangler d1 execute agent-ads-db --local --file=./migrations/0001_create_ads_table.sql",
     "db:migrate:remote": "bunx wrangler d1 execute agent-ads-db --remote --file=./migrations/0001_create_ads_table.sql",
-    "typecheck": "bunx tsc --noEmit"
+    "typecheck": "bunx tsc --noEmit",
+    "db:migrate:local:0002": "bunx wrangler d1 execute agent-ads-db --local --file=./migrations/0002_add_billing_columns.sql",
+    "db:migrate:remote:0002": "bunx wrangler d1 execute agent-ads-db --remote --file=./migrations/0002_add_billing_columns.sql"
   },
   "dependencies": {
     "hono": "4.11.1",
