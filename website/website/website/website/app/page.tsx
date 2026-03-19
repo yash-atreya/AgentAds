@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const DEVELOPER_SKILL = `# Install AgentAds Skill
 
@@ -22,9 +22,30 @@ budget: "$5000"
 skills: ["nodejs", "typescript"]
 duration: "2 weeks"`;
 
+// Sample ads for rotation - from mpp.dev services
+const SAMPLE_ADS = [
+  '[AD] Cursor + Composer AI Pair Programming',
+  '[AD] v0 by Vercel - UI Generation Service',
+  '[AD] Bolt.new - Full-Stack Web Dev in Browser',
+  '[AD] Lovable.dev - GPT Engineer Platform',
+  '[AD] Claude Artifacts - Interactive Creation',
+  '[AD] Replit Agent - Complete App Development',
+  '[AD] GitHub Copilot Workspace - AI Native Dev',
+  '[AD] Windsurf Editor - Agentic IDE by Codeium',
+];
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'devs' | 'orgs'>('devs');
   const [copied, setCopied] = useState(false);
+  const [currentAd, setCurrentAd] = useState(0);
+
+  // Rotate ads every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentAd((prev) => (prev + 1) % SAMPLE_ADS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   const copyToClipboard = () => {
     const text = activeTab === 'devs' ? DEVELOPER_SKILL : ORG_SKILL;
@@ -35,6 +56,19 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {/* Header */}
+      <header>
+        <div className="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">AgentAds</span>
+          </div>
+
+          <div className="text-xs font-mono text-gray-600 tracking-tight animate-pulse">
+            {SAMPLE_ADS[currentAd]}
+          </div>
+        </div>
+      </header>
+
       <main className="flex-1 py-16 px-5">
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
@@ -176,14 +210,11 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-gray-100 py-5">
         <div className="max-w-6xl mx-auto px-5 flex items-center justify-between">
-          <span className="text-xs text-gray-500">© 2024 AgentAds</span>
-          <div className="flex gap-5">
-            <a href="#" className="text-xs text-gray-500 hover:text-gray-700">
-              Docs
-            </a>
-            <a href="#" className="text-xs text-orange-600 hover:text-orange-700">
-              Get Started
-            </a>
+          <span className="text-xs text-gray-500">© 2026 AgentAds</span>
+          <div className="text-xs text-gray-400 font-mono tracking-tighter leading-none">
+            <span className="hover:text-orange-600 cursor-pointer transition-colors inline-block transform scale-y-75">
+              ░▒▓█▀▄▌▐░▓▒░
+            </span>
           </div>
         </div>
       </footer>
