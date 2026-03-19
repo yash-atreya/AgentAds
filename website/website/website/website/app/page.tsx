@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const DEVELOPER_SKILL = `# Install AgentAds Skill
 
@@ -22,28 +22,75 @@ budget: "$5000"
 skills: ["nodejs", "typescript"]
 duration: "2 weeks"`;
 
-// Sample ads for rotation - from mpp.dev services
+// Sample ads for rotation - skill.md format
 const SAMPLE_ADS = [
-  '[AD] Cursor + Composer AI Pair Programming',
-  '[AD] v0 by Vercel - UI Generation Service',
-  '[AD] Bolt.new - Full-Stack Web Dev in Browser',
-  '[AD] Lovable.dev - GPT Engineer Platform',
-  '[AD] Claude Artifacts - Interactive Creation',
-  '[AD] Replit Agent - Complete App Development',
-  '[AD] GitHub Copilot Workspace - AI Native Dev',
-  '[AD] Windsurf Editor - Agentic IDE by Codeium',
+  '[AD] cursor-composer.skill.md',
+  '[AD] v0-vercel.skill.md',
+  '[AD] bolt-new.skill.md',
+  '[AD] lovable-gpt.skill.md',
+  '[AD] claude-artifacts.skill.md',
+  '[AD] replit-agent.skill.md',
+  '[AD] copilot-workspace.skill.md',
+  '[AD] windsurf-editor.skill.md',
 ];
+
+// Matrix-style text scramble effect for ads
+const MatrixText = ({ text, isActive }: { text: string; isActive: boolean }) => {
+  const [displayText, setDisplayText] = useState(text);
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*/.-→';
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isActive) {
+      let iteration = 0;
+      intervalRef.current = setInterval(() => {
+        setDisplayText(
+          text
+            .split('')
+            .map((char, index) => {
+              if (index < iteration) {
+                return text[index];
+              }
+              if (char === ' ' || char === '→' || char === '.') return char;
+              return chars[Math.floor(Math.random() * chars.length)];
+            })
+            .join('')
+        );
+
+        if (iteration >= text.length) {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          setDisplayText(text);
+        }
+
+        iteration += 0.8;
+      }, 20);
+    } else {
+      setDisplayText(text);
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [text, isActive]);
+
+  return <>{displayText}</>;
+};
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'devs' | 'orgs'>('devs');
   const [copied, setCopied] = useState(false);
   const [currentAd, setCurrentAd] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Rotate ads every 3 seconds
+  // Rotate ads with Matrix effect
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentAd((prev) => (prev + 1) % SAMPLE_ADS.length);
-    }, 3000);
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentAd((prev) => (prev + 1) % SAMPLE_ADS.length);
+      }, 100);
+      setTimeout(() => setIsTransitioning(false), 500);
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -58,14 +105,18 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-white">
       {/* Header */}
       <header>
-        <div className="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-5 py-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">AgentAds</span>
+            <span className="text-lg">◈</span>
+            <span className="text-base font-medium tracking-tight ml-1">AgentAds</span>
           </div>
 
-          <div className="text-xs font-mono text-gray-600 tracking-tight animate-pulse">
-            {SAMPLE_ADS[currentAd]}
-          </div>
+          <button
+            onClick={() => console.log('Ad clicked:', SAMPLE_ADS[currentAd])}
+            className="text-xs font-mono text-gray-600 tracking-tight hover:text-orange-600 transition-colors cursor-pointer"
+          >
+            <MatrixText text={SAMPLE_ADS[currentAd]} isActive={isTransitioning} />
+          </button>
         </div>
       </header>
 
@@ -103,7 +154,7 @@ export default function Home() {
                     : 'bg-transparent text-gray-600'
                 }`}
               >
-                For Organizations
+                Post an Ad
               </button>
             </div>
           </div>
@@ -221,3 +272,76 @@ export default function Home() {
     </div>
   );
 }
+
+/* SAVED FOR FUTURE USE - Terminal Flow Component
+// Terminal animation component
+const TerminalFlow = () => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [showCursor, setShowCursor] = useState(true);
+
+  const steps = [
+    { command: '$ npm install -g agentads-skill', output: '+ agentads-skill@latest', delay: 800 },
+    { command: '$ agentads init', output: 'Initialized. Starting passive earnings...', delay: 1200 },
+    { command: '', output: '[viewing ads in background]', delay: 1800 },
+    { command: '', output: 'Earned: $0.05 → $0.15 → $0.45', delay: 2400 },
+    { command: '$ agentads balance', output: 'Balance: $0.45 (9 views)', delay: 3000 },
+  ];
+
+  useEffect(() => {
+    if (currentStep < steps.length) {
+      const timer = setTimeout(() => {
+        setCurrentStep(currentStep + 1);
+      }, steps[currentStep]?.delay || 1000);
+      return () => clearTimeout(timer);
+    } else {
+      // Reset animation after completion
+      const resetTimer = setTimeout(() => {
+        setCurrentStep(0);
+      }, 2000);
+      return () => clearTimeout(resetTimer);
+    }
+  }, [currentStep]);
+
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 500);
+    return () => clearInterval(cursorInterval);
+  }, []);
+
+  return (
+    <div className="h-96 bg-gray-50 border border-gray-200 font-mono overflow-hidden">
+      <div className="bg-white px-4 py-2 border-b border-gray-200 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">Terminal</span>
+        </div>
+        <div className="flex gap-1">
+          <span className="text-gray-400 text-xs">─</span>
+          <span className="text-gray-400 text-xs">□</span>
+          <span className="text-gray-400 text-xs">×</span>
+        </div>
+      </div>
+
+      <div className="p-6 text-sm leading-relaxed h-full overflow-hidden">
+        <div className="text-gray-500 mb-4">// Start earning in 30 seconds</div>
+        {steps.slice(0, currentStep).map((step, i) => (
+          <div key={i} className="mb-3">
+            {step.command && (
+              <div className="flex items-center">
+                <span className="text-orange-600 mr-2">›</span>
+                <span className="text-gray-700">{step.command.replace('$ ', '')}</span>
+              </div>
+            )}
+            {step.output && (
+              <div className="text-gray-600 ml-6">{step.output}</div>
+            )}
+          </div>
+        ))}
+        {currentStep < steps.length && (
+          <span className={`inline-block w-2 h-5 bg-orange-600 ${showCursor ? 'opacity-100' : 'opacity-0'}`}></span>
+        )}
+      </div>
+    </div>
+  );
+};
+*/
