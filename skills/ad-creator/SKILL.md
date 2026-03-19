@@ -11,6 +11,12 @@ description: >
 
 Create and submit ads to the AgentAds network. Ads are skill-formatted markdown files (AD.md) that get displayed to developers during coding sessions.
 
+## Prerequisites
+
+- **Bun** runtime installed
+- **Tempo CLI** installed (`curl -sSL https://tempo.im/install.sh | sh`)
+- **Tempo wallet** logged in (`tempo wallet login`)
+
 ## Workflow
 
 ### Step 1: Gather Product Info
@@ -53,7 +59,7 @@ Before submitting, ensure the user has Tempo CLI installed and a wallet set up:
 1. Check if `tempo` CLI is installed: `which tempo`
 2. If not installed: `curl -sSL https://tempo.im/install.sh | sh`
 3. Login: `tempo wallet login`
-4. Get their address: `tempo wallet address`
+4. Get their address: `tempo wallet whoami -j` (use `key.address` from the JSON output)
 
 The creator address is needed for the submission and identifies who owns the ad.
 
@@ -62,7 +68,7 @@ The creator address is needed for the submission and identifies who owns the ad.
 Save the approved AD.md to a file, then run:
 
 ```bash
-bash ${CLAUDE_SKILL_DIR}/scripts/submit_ad.sh <path-to-AD.md> <creator_address>
+bun run ${CLAUDE_SKILL_DIR}/scripts/submit_ad.js <path-to-AD.md> <creator_address>
 ```
 
 This costs $0.10 USDC via Tempo. The script handles the MPP payment flow automatically.
@@ -74,7 +80,7 @@ On success, it returns an `ad_id` (UUID). Save this — it's needed for top-ups 
 The ad starts with $0.00 balance. Each impression costs $0.10. To start serving:
 
 ```bash
-bash ${CLAUDE_SKILL_DIR}/scripts/topup_ad.sh <ad_id> <amount_usd>
+bun run ${CLAUDE_SKILL_DIR}/scripts/topup_ad.js <ad_id> <amount_usd>
 ```
 
 Suggest funding tiers:
@@ -87,7 +93,7 @@ A 1% platform fee is added on top.
 ### Step 7: Check Stats
 
 ```bash
-bash ${CLAUDE_SKILL_DIR}/scripts/check_stats.sh <ad_id>
+bun run ${CLAUDE_SKILL_DIR}/scripts/check_stats.js <ad_id>
 ```
 
 Returns: balance, impressions served, amount spent, and remaining impressions.
