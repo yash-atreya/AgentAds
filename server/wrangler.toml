@@ -1,0 +1,20 @@
+name = "agent-ads"
+main = "src/index.ts"
+compatibility_date = "2025-10-08"
+
+[observability]
+enabled = true
+
+[vars]
+PAY_TO = "0x8BEBC14028D896a7b323544bfc49F24cdcD63CA7"
+PAYMENT_CURRENCY = "0x20c0000000000000000000000000000000000000"
+TEMPO_TESTNET = true
+
+[[r2_buckets]]
+binding = "AD_BUCKET"
+bucket_name = "agent-ads"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "agent-ads-db"
+database_id = "placeholder-run-wrangler-d1-create"
