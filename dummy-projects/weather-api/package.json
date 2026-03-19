@@ -1,0 +1,27 @@
+{
+  "name": "weather-api-service",
+  "version": "1.0.0",
+  "description": "Fast, reliable weather API with real-time data and forecasts",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "weather",
+    "api",
+    "forecast",
+    "real-time",
+    "climate",
+    "meteorology"
+  ],
+  "author": "Weather API Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.0",
+    "axios": "^1.4.0",
+    "ws": "^8.13.0",
+    "redis": "^4.6.0"
+  }
+}

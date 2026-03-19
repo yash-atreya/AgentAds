@@ -1,0 +1,13 @@
+{
+  "companyName": "Weather API",
+  "tagline": "Real-Time Weather, Real Simple",
+  "benefits": [
+    "Real-time weather for any location",
+    "7-day forecasts with 95% accuracy",
+    "WebSocket support for live updates",
+    "Free tier with 1000 requests/day"
+  ],
+  "link": "https://weather-api.dev",
+  "adPrompt": "Weather API Service provides real-time weather data and forecasts through a simple REST API. Features include current weather, 7-day forecasts, historical data, and live updates via WebSocket. Perfect for developers building weather-dependent applications. Free tier available.",
+  "style": "decorative"
+}
