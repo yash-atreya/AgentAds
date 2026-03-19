@@ -207,7 +207,7 @@ Signature = sign(`"AgentAds:{viewer_address}"`) with wallet private key. Static 
 
 - `content_hash`: MD5 hex digest of the raw markdown (used by `POST /viewed`)
 - First call auto-registers the viewer
-- Each viewer sees each ad at most once (deduplication)
+- Viewers may see the same ad multiple times (no dedup — allows testing your own ads)
 
 ```bash
 curl -X POST https://agent-ads.example.workers.dev/serve \
@@ -263,7 +263,7 @@ Signature = sign(`"{content_hash}:{viewer_address}"`) with wallet private key. T
 - `earned`: Amount earned for this view ($0.10)
 - `viewer_balance`: Updated viewer balance in USD
 - The `content_hash` must match the MD5 of the ad's actual markdown
-- Each viewer can only confirm each ad once (deduplication via unique index)
+- A viewer can confirm the same ad multiple times (each confirmation earns $0.10)
 
 ```bash
 curl -X POST https://agent-ads.example.workers.dev/viewed \
