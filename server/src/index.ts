@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { Mppx, tempo } from "mppx/hono";
-import { createAdSchema, type AppContext } from "./types";
+import { createAdSchema, topupAmountSchema, type AppContext, type AdStatsRow } from "./types";
 
 const app = new Hono<AppContext>();
 
@@ -76,4 +76,70 @@ app.get("/ad/:id", async (c) => {
   });
 });
 
+app.get("/stats/:id", async (c) => {
+  const adId = c.req.param("id");
+  const row = await c.env.DB.prepare(
+    "SELECT ad_id, balance_cents, impressions FROM ads WHERE ad_id = ?"
+  ).bind(adId).first<AdStatsRow>();
+
+  if (!row) return c.json({ error: "Ad not found" }, 404);
+
+  const COST_PER_IMPRESSION_CENTS = 10;
+  return c.json({
+    ad_id: row.ad_id,
+    balance: row.balance_cents / 100,
+    impressions: row.impressions,
+    amount_spent: (row.impressions * COST_PER_IMPRESSION_CENTS) / 100,
+  });
+});
+
+app.post(
+  "/topup/:id",
+  async (c, next) => {
+    const adId = c.req.param("id");
+    const amountStr = c.req.query("amount");
+    if (!amountStr) return c.json({ error: "Missing required query parameter: amount" }, 400);
+
+    const parsed = topupAmountSchema.safeParse(amountStr);
+    if (!parsed.success) return c.json({ error: parsed.error.flatten() }, 400);
+
+    // Verify ad exists before accepting payment
+    const ad = await c.env.DB.prepare("SELECT ad_id FROM ads WHERE ad_id = ?")
+      .bind(adId).first();
+    if (!ad) return c.json({ error: "Ad not found" }, 404);
+
+    const mppx = Mppx.create({
+      methods: [tempo({
+        currency: c.env.PAYMENT_CURRENCY as `0x${string}`,
+        recipient: c.env.PAY_TO as `0x${string}`,
+        testnet: c.env.TEMPO_TESTNET,
+      })],
+      secretKey: c.env.MPP_SECRET_KEY,
+    });
+
+    return mppx.charge({
+      amount: parsed.data,
+      description: `Top up ad ${adId}`,
+    })(c, next);
+  },
+  async (c) => {
+    const adId = c.req.param("id");
+    const amountStr = c.req.query("amount")!;
+    const balanceIncrementCents = Math.round(parseFloat(amountStr) * 100);
+
+    await c.env.DB.prepare(
+      "UPDATE ads SET balance_cents = balance_cents + ? WHERE ad_id = ?"
+    ).bind(balanceIncrementCents, adId).run();
+
+    const ad = await c.env.DB.prepare(
+      "SELECT balance_cents FROM ads WHERE ad_id = ?"
+    ).bind(adId).first<{ balance_cents: number }>();
+
+    return c.json({
+      ad_id: adId,
+      topped_up: balanceIncrementCents / 100,
+      balance: ad!.balance_cents / 100,
+    });
+  }
+);
 export default app;
