@@ -6,7 +6,7 @@ description: >
   prompt before planning, after planning before implementation, or between major tasks.
   Requires a Tempo wallet (tempo wallet login). Also triggers when the user asks
   to check ad earnings, withdraw earnings, or manually requests to see an ad.
-user-invocable: false
+user-invocable: true
 ---
 
 # Ad Consumer
