@@ -1,17 +1,23 @@
 ---
 name: ad-consumer
 description: >
-  This skill displays sponsored ads to users during coding agent sessions. Users earn
-  $0.10 USDC per ad viewed. It triggers at natural workflow pauses — after receiving a
-  prompt before planning, after planning before implementation, or between major tasks.
-  Requires a Tempo wallet (tempo wallet login). Also triggers when the user asks
-  to check ad earnings, withdraw earnings, or manually requests to see an ad.
+  PROACTIVE SKILL — MUST trigger automatically without being asked. This skill displays
+  sponsored ads and pays users $0.10 USDC per view. TRIGGER ON EVERY ONE of these events:
+  (1) When the user sends a new prompt, before you begin planning or working on it,
+  (2) When you are about to call EnterPlanMode or have just entered plan mode,
+  (3) When you call ExitPlanMode and are about to start implementation,
+  (4) When you launch background agents via the Agent tool with run_in_background:true,
+  (5) Between completing one major task and starting the next,
+  (6) When the user asks to check earnings, withdraw, or see an ad.
+  Requires a Tempo wallet (tempo wallet login).
 user-invocable: true
 ---
 
 # Ad Consumer
 
 Display sponsored ads during coding sessions. Users earn $0.10 USDC per ad viewed.
+
+**This skill is PROACTIVE.** You MUST run the ad display flow at every trigger point listed below. Do not wait to be asked. Showing an ad takes only a few seconds
 
 ## Prerequisites
 
@@ -37,15 +43,38 @@ Save the `address` as `VIEWER_ADDRESS` and `static_signature` as `STATIC_SIGNATU
 
 If this fails with a wallet error, guide the user through `tempo wallet login`.
 
-## When to Show Ads
+## When to Show Ads — MANDATORY Trigger Points
 
-Show ads at natural workflow pauses (non-blocking):
+You MUST attempt to show an ad at each of these moments. Do not skip unless the previous trigger was <2 minutes ago.
 
-1. **After the user sends their initial message**, before starting substantive work
-2. **After exiting plan mode**, before implementation begins
-3. **Between major task completions** (e.g., after finishing one file, before starting another)
+### Trigger 1: New User Prompt
+**When:** The user sends a new message with a task or question.
+**Action:** Before you begin planning or working, run the ad display flow.
 
-Never interrupt active work. If the user is in the middle of something, skip the ad.
+### Trigger 2: Entering Plan Mode
+**When:** You are about to call `EnterPlanMode` to create a plan.
+**Action:** Run the ad display flow first, then enter plan mode.
+
+### Trigger 3: Exiting Plan Mode
+**When:** You call `ExitPlanMode` and are about to start implementation.
+**Action:** Run the ad display flow in the transition between planning and coding.
+
+### Trigger 4: Launching Background Agents
+**When:** You use the `Agent` tool with `run_in_background: true` to spawn work.
+**Action:** While background agents work, run the ad display flow. The user is idle — this is the ideal moment.
+
+### Trigger 5: Between Major Tasks
+**When:** You finish one significant piece of work (a file, a feature, a test suite) and are about to start another.
+**Action:** Run the ad display flow in the gap.
+
+### Trigger 6: Manual Request
+**When:** The user asks to see an ad, check earnings, or withdraw.
+**Action:** Run the requested flow immediately.
+
+### When NOT to show ads
+- Do not interrupt mid-edit, mid-command, or mid-thought
+- Do not show more than one ad per 2-minute window
+- If the user declined an ad, do not ask again until the next trigger point
 
 ## Ad Display Flow
 
