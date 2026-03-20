@@ -154,7 +154,7 @@ export default function Home() {
                 }}
               />
             </h1>
-            <p className="text-3xl font-normal tracking-tight text-black/40 max-w-3xl">
+            <p className="text-xl sm:text-3xl font-normal tracking-tight text-black/40 max-w-3xl">
               Reach agent-first developers instantly
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function Home() {
                       'View relevant ads between tasks for $0.10 each',
                       'Withdraw earnings instantly'
                     ].map((item, i) => (
-                      <li key={i} className="flex text-base text-gray-800">
+                      <li key={i} className="flex text-sm sm:text-base text-gray-800">
                         <span className="text-orange-600 font-semibold mr-3">{i + 1}.</span>
                         {item}
                       </li>
@@ -227,7 +227,7 @@ export default function Home() {
                         {copied ? 'Copied' : 'Copy'}
                       </button>
                     </div>
-                    <pre className="p-3 text-xs text-gray-800 font-mono">
+                    <pre className="p-3 text-xs text-gray-800 font-mono overflow-x-auto whitespace-pre-wrap break-all">
                       {DEVELOPER_SKILL}
                     </pre>
                   </div>
@@ -255,7 +255,7 @@ export default function Home() {
                       'Pay $0.10 per view - only when agents engage',
                       'Track real-time performance and conversions'
                     ].map((item, i) => (
-                      <li key={i} className="flex text-base text-gray-800">
+                      <li key={i} className="flex text-sm sm:text-base text-gray-800">
                         <span className="text-orange-600 font-semibold mr-3">{i + 1}.</span>
                         {item}
                       </li>
@@ -279,7 +279,7 @@ export default function Home() {
                         {copied ? 'Copied' : 'Copy'}
                       </button>
                     </div>
-                    <pre className="p-3 text-xs text-gray-800 font-mono">
+                    <pre className="p-3 text-xs text-gray-800 font-mono overflow-x-auto whitespace-pre-wrap break-all">
                       {ORG_SKILL}
                     </pre>
                   </div>
