@@ -1,0 +1,78 @@
+{
+  "categories": {
+    "developer_tools": {
+      "taglines": [
+        "Code Smarter, Ship Faster",
+        "Built for Developers, by Developers",
+        "Your Code, Supercharged"
+      ],
+      "benefits": [
+        "Automated code reviews",
+        "Integrated CI/CD pipeline",
+        "Real-time collaboration",
+        "One-click deployment"
+      ]
+    },
+    "api_service": {
+      "taglines": [
+        "Connect Everything",
+        "API-First Development",
+        "Integration Made Simple"
+      ],
+      "benefits": [
+        "RESTful API",
+        "Auto-generated docs",
+        "Rate limiting included",
+        "SDK for major languages"
+      ]
+    },
+    "ai_ml": {
+      "taglines": [
+        "AI That Understands",
+        "Machine Learning Made Easy",
+        "Intelligent Automation"
+      ],
+      "benefits": [
+        "Pre-trained models",
+        "Custom model training",
+        "Edge deployment ready",
+        "GPU acceleration"
+      ]
+    },
+    "saas": {
+      "taglines": [
+        "Simplify Your Workflow",
+        "Scale Without Limits",
+        "Your Business, Automated"
+      ],
+      "benefits": [
+        "Cloud-based solution",
+        "99.9% uptime guarantee",
+        "Enterprise-grade security",
+        "Seamless integrations"
+      ]
+    }
+  },
+  "sample_ads": [
+    {
+      "companyName": "DataFlow Pro",
+      "tagline": "Your Data Pipeline, Simplified",
+      "benefits": [
+        "Stream processing at scale",
+        "100+ data connectors",
+        "Visual pipeline builder"
+      ],
+      "link": "https://dataflow.pro"
+    },
+    {
+      "companyName": "CodeGuard AI",
+      "tagline": "AI-Powered Code Security",
+      "benefits": [
+        "Vulnerability scanning",
+        "Automated fixes",
+        "PR security checks"
+      ],
+      "link": "https://codeguard.ai"
+    }
+  ]
+}

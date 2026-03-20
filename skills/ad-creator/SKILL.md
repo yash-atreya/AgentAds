@@ -2,14 +2,14 @@
 name: ad-creator
 description: >
   This skill creates and submits ads to the AgentAds network. It guides through
-  crafting an AD.md skill file from a product description, setting up a Tempo wallet,
+  crafting an ASCII art ad from a product description, setting up a Tempo wallet,
   submitting via the API ($0.10), and funding the ad campaign. Use when the user wants
   to create an ad, advertise a product, or promote a project on the AgentAds network.
 ---
 
 # Ad Creator
 
-Create and submit ads to the AgentAds network. Ads are skill-formatted markdown files (AD.md) that get displayed to developers during coding sessions.
+Create and submit ASCII art ads to the AgentAds network. Ads are rendered as eye-catching bordered art that displays in developer terminals during coding sessions.
 
 ## Prerequisites
 
@@ -23,36 +23,76 @@ Create and submit ads to the AgentAds network. Ads are skill-formatted markdown 
 
 Analyze the user's project to understand what they're advertising:
 - Read `README.md`, `package.json`, `Cargo.toml`, or equivalent
-- Identify: product name, one-line description, key features, getting started instructions, website/repo URL
+- Identify: product name, tagline, 3-4 key benefits, website/repo URL
 - If project files aren't available, ask the user directly
+- Refer to `${CLAUDE_SKILL_DIR}/assets/examples.json` for category-specific tagline and benefit suggestions
 
-### Step 2: Generate AD.md
+### Step 2: Validate Ad Data
 
-Use the template at `${CLAUDE_SKILL_DIR}/assets/ad_template.md` to create an AD.md file. Replace all `{PLACEHOLDER}` values with real content.
+Before rendering, validate the ad data using:
 
-The AD.md must be a valid skill markdown file with YAML frontmatter:
-- `name`: Product name (short, memorable)
-- `description`: One compelling sentence describing the product
+```bash
+bun run ${CLAUDE_SKILL_DIR}/scripts/validate_ad.js '<json>'
+```
 
-The body should be concise, scannable markdown that a developer can read in 15-30 seconds. Include:
-- A hook paragraph (1-2 sentences, grab attention)
-- 3-4 key features as bold bullet points
-- Getting started instructions (install command, quick example)
-- A call-to-action with URL
+The JSON must have: `companyName` (≤30 chars), `tagline` (≤50 chars), `benefits` (2-6 items, each ≤60 chars), `link` (valid URL).
 
-Keep total content under 2000 characters for best engagement.
+Example:
+```bash
+bun run ${CLAUDE_SKILL_DIR}/scripts/validate_ad.js '{"companyName":"AgentAds","tagline":"Earn USDC While Your Agent Works","benefits":["$0.10 per impression","Instant on-chain payments","Works with Claude Code & Codex"],"link":"https://agentads.xyz"}'
+```
 
-### Step 3: Preview and Iterate
+Fix any errors before proceeding.
 
-Show the generated AD.md to the user. Ask if they want changes to:
-- The hook/tagline
-- Feature list
-- Getting started section
-- Call-to-action
+### Step 3: Render ASCII Art Ad
 
-Iterate until they approve.
+Render the ad using the professional style (default):
 
-### Step 4: Wallet Setup
+```bash
+bun run ${CLAUDE_SKILL_DIR}/scripts/render_ad.js professional '<json>'
+```
+
+Available styles: `professional` (box-drawing), `tech` (code comments), `minimal` (plain ASCII). Always default to `professional`.
+
+The renderer produces bordered ASCII art like:
+```
+╔══════════════════════════════════════════════════════╗
+║                     AGENTADS                         ║
+║         "Earn USDC While Your Agent Works"           ║
+╠══════════════════════════════════════════════════════╣
+║  ✓ $0.10 per impression                             ║
+║  ✓ Instant on-chain payments                        ║
+║  ✓ Works with Claude Code & Codex                   ║
+╠══════════════════════════════════════════════════════╣
+║  🔗 https://agentads.xyz                             ║
+╚══════════════════════════════════════════════════════╝
+```
+
+### Step 4: Build AD.md
+
+Combine the ASCII art with a hook paragraph and getting started instructions using the template at `${CLAUDE_SKILL_DIR}/assets/ad_template.md`.
+
+The final AD.md should look like:
+```
+--- Sponsored Ad ---
+
+<ASCII art block from Step 3>
+
+<1-2 sentence hook paragraph>
+
+Get Started:
+<Install command or quick start instructions>
+
+--- End Ad ---
+```
+
+Keep total content under 2000 characters.
+
+### Step 5: Preview and Iterate
+
+Show the generated AD.md to the user. Iterate until they approve.
+
+### Step 6: Wallet Setup
 
 Before submitting, ensure the user has Tempo CLI installed and a wallet set up:
 
@@ -63,7 +103,7 @@ Before submitting, ensure the user has Tempo CLI installed and a wallet set up:
 
 The creator address is needed for the submission and identifies who owns the ad.
 
-### Step 5: Submit
+### Step 7: Submit
 
 Save the approved AD.md to a file, then run:
 
@@ -75,7 +115,7 @@ This costs $0.10 USDC via Tempo. The script handles the MPP payment flow automat
 
 On success, it returns an `ad_id` (UUID). Save this — it's needed for top-ups and stats.
 
-### Step 6: Fund the Campaign
+### Step 8: Fund the Campaign
 
 The ad starts with $0.00 balance. Each impression costs $0.10. To start serving:
 
@@ -90,7 +130,7 @@ Suggest funding tiers:
 
 A 1% platform fee is added on top.
 
-### Step 7: Check Stats
+### Step 9: Check Stats
 
 ```bash
 bun run ${CLAUDE_SKILL_DIR}/scripts/check_stats.js <ad_id>
@@ -104,7 +144,7 @@ See `${CLAUDE_SKILL_DIR}/references/api_docs.md` for endpoint details.
 
 ## Important Notes
 
-- Ad content is stored as markdown in the platform — no ASCII art, no special formatting
+- Ads are rendered as ASCII art by default using the professional style
 - The `creator_address` must be a valid Ethereum address (0x + 40 hex chars)
 - Minimum ad content: 1 character. Maximum: 50,000 characters
 - Top-up amounts: $0.01 to $10,000.00
