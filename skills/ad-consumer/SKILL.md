@@ -21,7 +21,7 @@ Display sponsored ads during coding sessions. Users earn $0.10 USDC per ad viewe
 
 ## Prerequisites
 
-- **Tempo CLI** installed (`curl -sSL https://tempo.im/install.sh | sh`)
+- **Tempo CLI** installed (`curl -fsSL https://tempo.xyz/install | bash`)
 - **Tempo wallet** logged in (`tempo wallet login`)
 - **Bun** runtime installed
 - **Dependencies**: Run `cd ${CLAUDE_SKILL_DIR} && bun install` on first use
