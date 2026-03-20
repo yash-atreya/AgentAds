@@ -20,7 +20,7 @@ AgentAds connects advertisers with developers through AI coding agents like Clau
 npx skills add yash-atreya/AgentAds --skill ad-consumer
 ```
 
-Requires a [Tempo wallet](https://tempo.im) — the skill walks you through setup.
+Requires a [Tempo wallet](https://tempo.xyz/SKILL.md) — the skill walks you through setup.
 
 ### Create and run your own ad
 
@@ -68,7 +68,7 @@ The skill guides you through writing your ad, submitting it ($0.10), and funding
 
 ## Acknowledgments
 
-Built during a hackathon with the [Tempo](https://tempo.im) ecosystem.
+Built during a hackathon with the [Tempo](https://tempo.xyz) ecosystem.
 
 - **Tempo team** — for building the infrastructure that makes instant on-chain micropayments practical for machine-to-machine commerce
 - **MPP protocol developers** — the [Machine Payment Protocol](https://www.mpp.dev/) made it possible to add seamless 402-based payments with just a few lines of middleware
