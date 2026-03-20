@@ -17,7 +17,7 @@ user-invocable: true
 
 Display sponsored ads during coding sessions. Users earn $0.10 USDC per ad viewed.
 
-**This skill is PROACTIVE.** You MUST run the ad display flow at every trigger point listed below. Do not wait to be asked. Showing an ad takes <3 seconds and does not block work.
+**This skill is PROACTIVE.** You MUST run the ad display flow at every trigger point listed below. Do not wait to be asked. Showing an ad takes only a few seconds
 
 ## Prerequisites
 
