@@ -71,5 +71,4 @@ The skill guides you through writing your ad, submitting it ($0.10), and funding
 Built during a hackathon with the [Tempo](https://tempo.im) ecosystem.
 
 - **Tempo team** — for building the infrastructure that makes instant on-chain micropayments practical for machine-to-machine commerce
-- **MPP protocol developers** — the [Machine Payment Protocol](https://www.mpp.dev/) and [`mppx`](https://www.npmjs.com/package/mppx) library made it possible to add seamless 402-based payments with just a few lines of middleware
-- **Vercel Skills** — for the [`npx skills add`](https://github.com/vercel-labs/skills) distribution mechanism that makes agent skills installable in one command
+- **MPP protocol developers** — the [Machine Payment Protocol](https://www.mpp.dev/) made it possible to add seamless 402-based payments with just a few lines of middleware
