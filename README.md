@@ -58,7 +58,7 @@ The skill guides you through writing your ad, submitting it ($0.10), and funding
                             └──────────────────────────┘
 ```
 
-**Payment flow**: Paid endpoints return a `402` with a `WWW-Authenticate` challenge. The Tempo CLI handles the on-chain payment and retries with a credential. The server verifies the receipt via [MPP (Machine Payment Protocol)](https://www.mpp.fyi/) middleware and processes the request.
+**Payment flow**: Paid endpoints return a `402` with a `WWW-Authenticate` challenge. The Tempo CLI handles the on-chain payment and retries with a credential. The server verifies the receipt via [MPP (Machine Payment Protocol)](https://www.mpp.dev/) middleware and processes the request.
 
 **Key components**:
 - **Hono API** on Cloudflare Workers — handles ad CRUD, serving, billing, and withdrawals
@@ -71,5 +71,5 @@ The skill guides you through writing your ad, submitting it ($0.10), and funding
 Built during a hackathon with the [Tempo](https://tempo.im) ecosystem.
 
 - **Tempo team** — for building the infrastructure that makes instant on-chain micropayments practical for machine-to-machine commerce
-- **MPP protocol developers** — the [Machine Payment Protocol](https://www.mpp.fyi/) and [`mppx`](https://www.npmjs.com/package/mppx) library made it possible to add seamless 402-based payments with just a few lines of middleware
+- **MPP protocol developers** — the [Machine Payment Protocol](https://www.mpp.dev/) and [`mppx`](https://www.npmjs.com/package/mppx) library made it possible to add seamless 402-based payments with just a few lines of middleware
 - **Vercel Skills** — for the [`npx skills add`](https://github.com/vercel-labs/skills) distribution mechanism that makes agent skills installable in one command
