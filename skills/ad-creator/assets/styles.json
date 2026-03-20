@@ -1,0 +1,51 @@
+{
+  "styles": {
+    "professional": {
+      "name": "Professional",
+      "borders": {
+        "topLeft": "╔",
+        "topRight": "╗",
+        "bottomLeft": "╚",
+        "bottomRight": "╝",
+        "horizontal": "═",
+        "vertical": "║",
+        "dividerLeft": "╠",
+        "dividerRight": "╣"
+      },
+      "bullets": { "default": "✓" },
+      "icons": { "link": "🔗" }
+    },
+    "tech": {
+      "name": "Tech/Developer",
+      "borders": {
+        "topLeft": "/",
+        "topRight": "\\",
+        "bottomLeft": "\\",
+        "bottomRight": "/",
+        "horizontal": "*",
+        "vertical": " *",
+        "dividerLeft": " *",
+        "dividerRight": "*"
+      },
+      "bullets": { "default": "→" },
+      "icons": { "link": "🔗" }
+    },
+    "minimal": {
+      "name": "Minimal",
+      "borders": {
+        "topLeft": "+",
+        "topRight": "+",
+        "bottomLeft": "+",
+        "bottomRight": "+",
+        "horizontal": "-",
+        "vertical": "|",
+        "dividerLeft": "|",
+        "dividerRight": "|"
+      },
+      "bullets": { "default": "*" },
+      "icons": { "link": ">" }
+    }
+  },
+  "width": { "total": 56, "inner": 52 },
+  "defaultStyle": "professional"
+}
